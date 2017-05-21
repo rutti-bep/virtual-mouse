@@ -7,14 +7,17 @@
 //
 
 import Cocoa
+import AVFoundation
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-
+    
+    let mouseController = MouseController();
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+        mouseController.Move(point: CGPoint(x:0,y:100))
+       
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
