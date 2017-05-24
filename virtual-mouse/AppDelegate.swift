@@ -7,16 +7,71 @@
 //
 
 import Cocoa
+import AppKit
 import AVFoundation
+import Foundation
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    var window:NSWindow?;
+    
+    var UIView = NSView()
+    var InputFieldX = NSTextField();
+    var InputFieldY = NSTextField();
+    var clickButton = SuperButton();
+    var moveButton = SuperButton();
+    
     let mouseController = MouseController();
+    
+    func move(){
+        guard let x = Int(InputFieldX.stringValue) else {
+            return;
+        }
+        guard let y = Int(InputFieldY.stringValue) else {
+            return;
+        }
+        mouseController.Move(point: CGPoint(x:x,y:y));
+        
+        if(clickButton.state == 1){
+            mouseController.Down(point: CGPoint(x:x,y:y));
+            mouseController.Up(point: CGPoint(x:x,y:y))
+        }
+        
+    }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-        mouseController.Move(point: CGPoint(x:0,y:100))
+        window = NSWindow(contentRect: NSRect(x:NSScreen.main()!.frame.midX,y:NSScreen.main()!.frame.midY,width:400,height:400), styleMask: [.closable,.titled], backing: NSBackingStoreType.buffered, defer:false)
+        window!.title = "virtual-mouse"
+        //window!.isOpaque = false
+        //window!.styleMask.insert(.fullSizeContentView)
+        window!.center()
+        window!.isMovableByWindowBackground = true
+        //window!.backgroundColor = NSColor(calibratedHue: 0, saturation: 1.0, brightness: 0.5, alpha: 0.7)
+        window!.makeKeyAndOrderFront(nil)
+        
+        UIView.frame = window!.frame;
+        UIView.frame.origin = NSPoint(x:0,y:window!.frame.minY);
+        window!.contentView?.addSubview(UIView);
+        
+        InputFieldX.frame = NSRect(x:10,y:10,width:50,height:20);
+        InputFieldX.placeholderString = "x";
+        UIView.addSubview(InputFieldX);
+        
+        InputFieldY.frame = NSRect(x:70,y:10,width:50,height:20);
+        InputFieldY.placeholderString = "y"
+        UIView.addSubview(InputFieldY);
+        
+        clickButton.create(title: "click?",x:130,y:10,width: 50,height: 20);
+        clickButton.setButtonType(NSSwitchButton)
+        UIView.addSubview(clickButton)
+        
+        moveButton.create(title: "move", x: 230, y: 10, width: 50, height: 20, action: #selector(AppDelegate.move))
+        UIView.addSubview(moveButton)
+        //window!.contentView?.addSubview(UIViewController.view)
+        
+        //mouseController.Move(point: CGPoint(x:0,y:100))
        
     }
 
@@ -26,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Core Data stack
 
-    lazy var persistentContainer: NSPersistentContainer = {
+    var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the
