@@ -9,7 +9,8 @@ import Cocoa
 import Foundation
 
 class MouseController:NSObject {
-    let kDelayUsec : useconds_t = 4000;
+    let moveDelayUsec : useconds_t = 4000;
+    let clickDelayUsec : useconds_t = 10000;
     var isDown = false
     let screenSize = NSScreen.main()!.frame;
     
@@ -50,7 +51,7 @@ class MouseController:NSObject {
             
             let mouseMove = CGEvent(mouseEventSource:nil, mouseType:.leftMouseDragged, mouseCursorPosition:point, mouseButton:CGMouseButton.left)
             mouseMove!.post(tap:.cghidEventTap)
-            usleep(self.kDelayUsec)
+            usleep(self.moveDelayUsec)
         }
     }
     
@@ -68,8 +69,9 @@ class MouseController:NSObject {
     
     func click(point: CGPoint){
         self.Down(point: point);
-        usleep(self.kDelayUsec)
+        usleep(self.clickDelayUsec)
         self.Up(point: point);
+        usleep(self.clickDelayUsec);
     }
     
     func doubleClick(point: CGPoint){

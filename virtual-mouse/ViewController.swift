@@ -14,7 +14,6 @@ class ViewController: NSViewController {
     let isCatchMouseEvent = false;
     
     override func viewDidAppear() {
-        print("!!!")
         super.viewDidLoad()
         if(isCatchMouseEvent){
             NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {

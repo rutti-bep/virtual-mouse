@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var clickButton = SuperButton();
     var doubleClickButton = SuperButton();
     var moveButton = SuperButton();
+    var imgView = NSImageView();
     
     let mouseController = MouseController();
     
@@ -42,6 +43,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         mouseController.Move(frame: NSRect(x:x,y:y,width:randomX,height:randomY));
         
+        let img = CGDisplayCreateImage(CGMainDisplayID())
+        let pixelData = img!.dataProvider!.data
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        let pixelInfo: Int = ((Int(img!.width) * Int(y)) + Int(x)) * 4
+        
+        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+        let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
+        let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
+        
+        Swift.print(CGColor(red: r, green: g, blue: b, alpha: a));
+        imgView.layer?.backgroundColor = CGColor(red: r, green: g, blue: b, alpha: a);
+        Swift.print(img!.width)
+        Swift.print(img!.height)
+        if(randomX > 0 && randomY > 0){
+            let scopeImage = img!.cropping(to: CGRect(x:x*2,y:y*2,width:randomX*2,height:randomY*2))
+            imgView.image = NSImage(cgImage: scopeImage!, size: CGSize(width:scopeImage!.width,height:scopeImage!.height));
+        }
+            
         if(doubleClickButton.state == 1){
             mouseController.doubleClick(point: CGPoint(x:x,y:y));
         }else if(clickButton.state == 1){
@@ -64,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         viewController.view = NSView(frame: NSMakeRect(0, 0, window!.frame.size.width, window!.frame.size.height));
         viewController.view.wantsLayer = true
-        viewController.view.layer?.backgroundColor = NSColor.red.cgColor
+        //viewController.view.layer?.backgroundColor = NSColor.red.cgColor
         window!.contentView?.addSubview(viewController.view);
         
         InputFieldX.frame = NSRect(x:10,y:window!.frame.minY,width:50,height:20);
@@ -94,6 +114,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         moveButton.create(title: "move", x: 250, y:window!.frame.minY, width: 50, height: 20, action: #selector(AppDelegate.move))
         viewController.view.addSubview(moveButton)
         
+        imgView = NSImageView(frame: NSRect(x:0,y:0,width:window!.frame.width,height:window!.frame.height-100));
+        imgView.wantsLayer = true
+        imgView.layer?.backgroundColor = NSColor.red.cgColor
+        viewController.view.addSubview(imgView)
         
         //window!.contentView?.addSubview(viewController.viewController.view)
         
