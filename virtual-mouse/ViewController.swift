@@ -10,21 +10,27 @@ import Cocoa
 
 class ViewController: NSViewController {
     var mouseLocation: CGPoint = .zero;
-   /* override func viewDidAppear() {
+    let screenSize = NSScreen.main()!.frame;
+    let isCatchMouseEvent = false;
+    
+    override func viewDidAppear() {
         print("!!!")
         super.viewDidLoad()
-        NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
-            self.mouseLocation = NSEvent.mouseLocation()
-            print(String(format: "%.0f, %.0f", self.mouseLocation.x, self.mouseLocation.y))
-            return $0
-        }
-        NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { _ in
-            self.mouseLocation = NSEvent.mouseLocation()
-            print(String(format: "%.0f, %.0f", self.mouseLocation.x, self.mouseLocation.y))
+        if(isCatchMouseEvent){
+            NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved]) {
+                let mousePoint = NSEvent.mouseLocation();
+                self.mouseLocation = CGPoint(x:self.screenSize.maxX-mousePoint.x,y:self.screenSize.maxX-mousePoint.y)
+                print(String(format: "%.0f, %.0f", self.mouseLocation.x, self.mouseLocation.y))
+                return $0
+            }
+            NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { _ in
+                self.mouseLocation = NSEvent.mouseLocation()
+                print(String(format: "%.0f, %.0f", self.mouseLocation.x, self.mouseLocation.y))
+            }
         }
         // Do any additional setup after loading the view.
     }
-*/
+
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
