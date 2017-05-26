@@ -18,7 +18,7 @@
 
 /* Begin PBXFileReference section */
 		5940CC2C1ED22B0C00F1DCB8 /* virtual-mouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "virtual-mouse.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5940CC2F1ED22B0C00F1DCB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5940CC2F1ED22B0C00F1DCB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		5940CC311ED22B0C00F1DCB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5940CC341ED22B0C00F1DCB8 /* virtual_mouse.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = virtual_mouse.xcdatamodel; sourceTree = "<group>"; };
 		5940CC361ED22B0C00F1DCB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -303,6 +303,7 @@
 				5940CC401ED22B0D00F1DCB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

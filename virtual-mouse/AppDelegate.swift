@@ -16,10 +16,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var window:NSWindow?;
     
-    var UIView = NSView()
+    let viewController = ViewController()
     var InputFieldX = NSTextField();
     var InputFieldY = NSTextField();
+    var InputFieldRandomX = NSTextField();
+    var InputFieldRandomY = NSTextField();
     var clickButton = SuperButton();
+    var doubleClickButton = SuperButton();
     var moveButton = SuperButton();
     
     let mouseController = MouseController();
@@ -31,11 +34,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let y = Int(InputFieldY.stringValue) else {
             return;
         }
-        mouseController.Move(point: CGPoint(x:x,y:y));
+        guard let randomX = Int(InputFieldRandomX.stringValue) else {
+            return;
+        }
+        guard let randomY = Int(InputFieldRandomY.stringValue) else {
+            return;
+        }
+        mouseController.Move(frame: NSRect(x:x,y:y,width:randomX,height:randomY));
         
-        if(clickButton.state == 1){
-            mouseController.Down(point: CGPoint(x:x,y:y));
-            mouseController.Up(point: CGPoint(x:x,y:y))
+        if(doubleClickButton.state == 1){
+            mouseController.doubleClick(point: CGPoint(x:x,y:y));
+        }else if(clickButton.state == 1){
+            mouseController.click(point: CGPoint(x:x,y:y));
         }
         
     }
@@ -43,6 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         window = NSWindow(contentRect: NSRect(x:NSScreen.main()!.frame.midX,y:NSScreen.main()!.frame.midY,width:400,height:400), styleMask: [.closable,.titled], backing: NSBackingStoreType.buffered, defer:false)
+        window!.acceptsMouseMovedEvents = true
         window!.title = "virtual-mouse"
         //window!.isOpaque = false
         //window!.styleMask.insert(.fullSizeContentView)
@@ -51,25 +62,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //window!.backgroundColor = NSColor(calibratedHue: 0, saturation: 1.0, brightness: 0.5, alpha: 0.7)
         window!.makeKeyAndOrderFront(nil)
         
-        UIView.frame = window!.frame;
-        UIView.frame.origin = NSPoint(x:0,y:window!.frame.minY);
-        window!.contentView?.addSubview(UIView);
+        viewController.view = NSView(frame: NSMakeRect(0, 0, window!.frame.size.width, window!.frame.size.height));
+        viewController.view.wantsLayer = true
+        viewController.view.layer?.backgroundColor = NSColor.red.cgColor
+        window!.contentView?.addSubview(viewController.view);
         
-        InputFieldX.frame = NSRect(x:10,y:10,width:50,height:20);
+        InputFieldX.frame = NSRect(x:10,y:window!.frame.minY,width:50,height:20);
         InputFieldX.placeholderString = "x";
-        UIView.addSubview(InputFieldX);
+        viewController.view.addSubview(InputFieldX);
         
-        InputFieldY.frame = NSRect(x:70,y:10,width:50,height:20);
+        InputFieldY.frame = NSRect(x:70,y:window!.frame.minY,width:50,height:20);
         InputFieldY.placeholderString = "y"
-        UIView.addSubview(InputFieldY);
+        viewController.view.addSubview(InputFieldY);
         
-        clickButton.create(title: "click?",x:130,y:10,width: 50,height: 20);
+        InputFieldRandomX.frame = NSRect(x:10,y:window!.frame.minY-20,width:50,height:20);
+        InputFieldRandomX.placeholderString = "randomX";
+        viewController.view.addSubview(InputFieldRandomX);
+        
+        InputFieldRandomY.frame = NSRect(x:70,y:window!.frame.minY-20,width:50,height:20);
+        InputFieldRandomY.placeholderString = "randomY";
+        viewController.view.addSubview(InputFieldRandomY);
+        
+        clickButton.create(title: "click?",x:130,y:window!.frame.minY,width: 50,height: 20);
         clickButton.setButtonType(NSSwitchButton)
-        UIView.addSubview(clickButton)
+        viewController.view.addSubview(clickButton)
         
-        moveButton.create(title: "move", x: 230, y: 10, width: 50, height: 20, action: #selector(AppDelegate.move))
-        UIView.addSubview(moveButton)
-        //window!.contentView?.addSubview(UIViewController.view)
+        doubleClickButton.create(title: "double?",x:190,y:window!.frame.minY,width: 50,height: 20);
+        doubleClickButton.setButtonType(NSSwitchButton)
+        viewController.view.addSubview(doubleClickButton)
+        
+        moveButton.create(title: "move", x: 250, y:window!.frame.minY, width: 50, height: 20, action: #selector(AppDelegate.move))
+        viewController.view.addSubview(moveButton)
+        
+        
+        //window!.contentView?.addSubview(viewController.viewController.view)
         
         //mouseController.Move(point: CGPoint(x:0,y:100))
        
